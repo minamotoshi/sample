@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - OBJLoader + MTLLoader</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script src="js/libs/three.min.js"></script>
+		<script src="js/libs/MTLLoader.js"></script>
+		<script src="js/libs/OBJLoader.js"></script>
+		<script src="js/libs/TrackballControls.js"></script>
+		<script src="js/Exhibit.class.js"></script>
+		<script>
+var game = null;
+window.addEventListener("load", function(e){
+	game = new Exhibit.main(document.getElementById("game"));
+	game.launch();
+	game.show("obj/bora/");
+});
+		</script>
+	</head>
+
+	<body>
+		<div id="info">
+		
+		</div>
+		<div id="loading"></div>
+		<div id="game"></div>
+	</body>
+</html>

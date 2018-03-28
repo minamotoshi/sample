@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>劲霸demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#loading {
+				position: absolute;
+				top: 0px; width: 100%;
+				color: #ffffff;
+				padding: 5px;
+				font-family:Monospace;
+				font-size:13px;
+				font-weight: bold;
+				text-align:center;
+				font-size: 50pt;
+			}
+		</style>
+		<script src="js/three.min.js"></script>
+		<script src="js/Device.class.js"></script>
+		<script src="js/preloadjs-0.6.2.min.js"></script>
+		<script src="js/soundjs-0.6.2.min.js"></script>
+		<script src="js/DeviceOrientationControls.js"></script>
+		<script src="js/AntiMeshControls.js"></script>
+		<script src="js/Stadium.class.js"></script>
+		<script>
+var stadium;
+window.onload = function(e){
+	stadium = new Stadium.main(document.getElementById("container"));
+	stadium.preload(pregress, complete);
+}
+function pregress(e){
+	var per = Math.floor(e.loaded * 10000) /100;
+	document.getElementById("loading").innerHTML = per + "%";
+}
+function complete(e){
+	document.body.removeChild(document.getElementById("loading"));
+	stadium.start();
+}
+		</script>
+	</head>
+	<body>
+		<div id="loading"></div>
+		<div id="container"></div>
+	</body>
+</html>

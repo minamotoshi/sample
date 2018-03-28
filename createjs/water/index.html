@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+	<meta charset="utf-8">
+	<title>水波</title>
+
+	<link href="css/style.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+	<script type="text/javascript" src="js/easeljs-0.8.2.min.js"></script>
+	<script type="text/javascript" src="js/preloadjs-0.6.2.min.js"></script>
+	<script type="text/javascript" src="js/tweenjs-0.6.2.min.js"></script>
+	<script type="text/javascript" src="js/Water.class.js"></script>
+	<script type="text/javascript">
+
+window.onload = function(){
+	Water.init();
+	var pattern = /(\w+)\/?([a-zA-Z0-9\._]*)\s?(\([^\)]*\))?\s?/g;
+	var str = "Mozilla/5.0 (Linux; U; Android 4.3; zh-cn; SM-N9008V Build/JSS15J) AppleWebKit/533.1 (KHTML, like Gecko)Version/4.0 MQQBrowser/5.4 TBS/025489 Mobile Safari/533.1 MicroMessenger/6.3.9.48_refecd3e.700 NetType/WIFI Language/zh_CN";
+	//var str = navigator.userAgent;
+	var arr
+	while(arr = pattern.exec(str)){
+		console.log(arr);
+	}
+	
+	$("#device").text(navigator.userAgent);
+	window.addEventListener( 'devicemotion', devicemotion, false );
+	window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
+	window.addEventListener( 'deviceorientation', onGravity, false);
+};
+	
+function onGravity(e){
+	$("#alpha").text(e.alpha);
+	$("#beta").text(e.beta);
+	$("#gamma").text(e.gamma);
+	var h = Math.sin(e.beta * Math.PI / 180) * 100;
+	var v = Math.sin(e.gamma * Math.PI / 180) * 100;
+	v = -v;
+	$("#horizontal").text(h);
+	$("#vertical").text(v);
+	var r = Math.atan2(v, h);
+	var angle = r * 180 / Math.PI;
+	$("#angle").text( angle );
+	Water.tilt();
+}
+function devicemotion(e) {
+	var acceleration = e.accelerationIncludingGravity;
+	$("#acceleration").text("x:" + acceleration.x +";y:" + acceleration.y +"z:" + acceleration.z);
+	var dis = Math.pow( acceleration.x * acceleration.y * acceleration.z, 1/3);
+}
+function onScreenOrientationChangeEvent(e){
+	$("#orient").text(window.orientation);
+}
+	</script>
+
+</head>
+
+<body>
+
+
+<div class="box">
+	<div>1.0.0</div>
+	<ul>
+		<li>device:<span id="device"></span></li>
+		<li>acceleration:<span id="acceleration"></span></li>
+		<li>alpha:<span id="alpha"></span></li>
+		<li>beta:<span id="beta"></span></li>
+		<li>gamma:<span id="gamma"></span></li>
+		<li>horizontal:<span id="horizontal"></span></li>
+		<li>vertical:<span id="vertical"></span></li>
+		<li>angle:<span id="angle"></span></li>
+	</ul>
+	<canvas id="waterCanvas" width="500" height="400"></canvas>
+
+</div>
+</body>
+</html>

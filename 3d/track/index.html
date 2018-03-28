@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>单身狗大作战</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script src="js/libs/three.min.js"></script>
+		<script src="js/libs/preloadjs-0.6.2.min.js"></script>
+		<script src="js/libs/FBXLoader.js"></script>
+		<script src="js/libs/MTLLoader.js"></script>
+		<script src="js/libs/OBJLoader.js"></script>
+		<script src="js/Track.class.js"></script>
+		<script>
+var game = null;
+window.addEventListener("load", function(e){
+	Track.Preload.load(progress, complete);
+});
+function progress(e){
+	document.getElementById("loading").innerHTML = e.loaded*100 + "%";
+}
+function complete(e){
+	document.getElementById("loading").style.display = "none";
+	game = new Track.main(document.getElementById("game"));
+	game.launch();
+	//game.show();
+}
+		</script>
+	</head>
+
+	<body>
+		<div id="info">
+		
+		</div>
+		<div id="loading"></div>
+		<div id="game"></div>
+	</body>
+</html>

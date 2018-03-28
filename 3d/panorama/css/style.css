@@ -1,0 +1,42 @@
+@charset "utf-8";
+
+body{font-size:12px;-webkit-text-size-adjust:none; position:relative;} dl,dd,dt{overflow:hidden; font-family:Arial;}
+
+body {
+	background-color: #000000;
+	margin: 0;
+	cursor: move;
+	overflow: hidden;
+}
+#loading { background: #000; color:#fff; text-align:center; font-size:50px; }
+#operate { color:#fff }
+.mesh_group { display:none }
+
+.clear {clear:both}
+
+#cube {}
+#cube li{border: 1px solid #fff; list-style: none; width:100px; height:50px; margin 2px; float:left}
+#cube li span{float:left; clear:both}
+#cube li .word{width:50px; height:50px; float:left; clear:both}
+#cube li .previewImg{width:50px; height:50px; float:left;clear:right}
+.previewImg img{ width:50px; height:50px }
+
+
+.fade_img {animation: act_fade 1s infinite forwards;
+	-webkit-animation: act_fade 1s infinite forwards;}
+@keyframes act_fade{
+	from {opacity:0}
+ 	to{opacity:1}
+}
+@-webkit-keyframes act_fade{
+	from {opacity:0}
+ 	to{opacity:1}
+}
+
+
+@media only screen and (max-width:639px){
+	.box_textarea textarea{line-height:20px; font-size:12px;}
+	.box_bag p{line-height:20px; font-size:12px;}
+}
+	
+	

@@ -1,0 +1,60 @@
+@charset "utf-8";
+body {
+	background-color: #000000;
+	margin: 0px;
+	overflow: hidden;
+}
+
+#info {
+	position: absolute;
+	top: 0px; width: 100%;
+	color: #ffffff;
+	padding: 5px;
+	font-family:Monospace;
+	font-size:13px;
+	font-weight: bold;
+	text-align:center;
+}
+#messagePop {
+	border: 1px solid #f0;
+	margin: 10px;
+	position:absolute;
+	right: 1px;
+	top: 1px;
+	color: #f00;
+	z-index:11;
+	overflow:scroll;
+}
+#controllor {
+	background: #ddd;
+	position:absolute;
+	left: 1px;
+	top: 1px;
+	z-index:10;
+}
+.btns {
+	width:200px;
+	margin: 50px auto 0;
+}
+.btns input{
+	width:200px;
+	height:100px;
+	font-size:20pt;
+}
+#loadingPop{
+	background: #ddd;
+	font-size:20pt;
+	z-index:9;
+	text-align:center;
+	padding-top:50px;
+}
+a {
+	color: #ffffff;
+}
+
+@media only screen and (max-width:639px){
+	.box_textarea textarea{line-height:20px; font-size:12px;}
+	.box_bag p{line-height:20px; font-size:12px;}
+}
+	
+	

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>3d赛车</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script src="js/lib/jquery-3.1.0.min.js"></script>
+	<script src="js/lib/three.min.js"></script>
+	<script src="js/lib/stats.min.js"></script>
+	<script src="js/lib/StereoEffect.js"></script>
+	<script src="js/lib/Tween.js"></script>
+	<script src="js/lib/ctm/lzma.js"></script>
+	<script src="js/lib/ctm/ctm.js"></script>
+	<script src="js/lib/ctm/CTMLoader.js"></script>
+	<script src="js/lib/OBJLoader.js"></script>
+	<script src="js/lib/Device.class.js"></script>
+	<script src="js/lib/preloadjs-0.6.2.min.js"></script>
+	<script src="js/lib/soundjs-0.6.2.min.js"></script>
+	<script src="js/Rush.class.js"></script>
+	<script>
+var game;
+window.onload = function(e){
+	Rush.Preload.init();
+	Rush.Preload.load(pregress, complete);
+	$("#pop").show();
+	$("#start").hide();
+}
+function pregress(e){
+	var per = Math.floor(e.loaded * 10000) /100;
+	$("#pop .substance").text(per + "%");
+}
+function complete(e){
+	$("#pop .substance").text("模型加载中……");
+	$("#container").on("touchstart", function(e){e.preventDefault();});
+	$("#container").on("touchmove", function(e){e.preventDefault();});
+	game = new Rush.main($("#container")[0], $("#score"));
+	game.addEventListener(Rush.Event.SCORE_ADD, onScoreChange);
+	game.addEventListener(Rush.Event.ROAD_READY, onRoadReady);
+	game.launch();
+}
+function onScoreChange(e){
+	$("#score .score_value").text(e.data);
+}
+function onRoadReady(e){
+	$("#pop").hide();
+	$("#start").show();
+	$("#start .substance :button").on("click", onGameStart);
+}
+function onGameStart(e){
+	$("#start").hide();
+	game.start();
+}
+	</script>
+</head>
+<body>
+	<div id="pop">
+		<div class="content">
+			<div class="border">
+				<div class="substance">
+				载入中……
+				</div>
+			</div>
+		</div>
+		<div class="bg"></div>
+	</div>
+	<div id="start">
+		<div class="content">
+			<div class="border">
+				<div class="substance">
+					<p>用键盘的左右键或者手机重力感应控制汽车</p>
+					<p><input type="button" value="开始游戏" /></p>
+					
+				</div>
+			</div>
+		</div>
+		<div class="bg"></div>
+	</div>
+	<div id="container"></div>
+	<div id="score">积分：<span class="score_value">0</span></div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>three.js css3d - panorama - deviceorientation</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script src="js/three.min.js"></script>
+		<script src="js/CustomDeviceOrientation.js"></script>
+		<script src="js/CSS3DRenderer.js"></script>
+		<script src="js/Projector.js"></script>
+		<script src="js/CanvasRenderer.js"></script>
+		<script src="js/jquery-2.2.1.min.js"></script>
+		<script src="js/Panorama.class.js"></script>
+		<script>
+var cubeFile = $('<input type="file" accept="image/*" />');
+var addtionFiles = $('<input type="file" accept="image/*" multiple="multiple" />');
+$(function(e){
+	$("#cube li").on("click", cubeBrowse);
+	$("#addtion").on("click", function(e){ addtionFiles.click(); });
+	$("#operate").one("submit", operateSubmit);
+	addtionFiles.on("change",addtionChange);
+})
+function cubeBrowse(){
+	var s = $(this);
+	cubeFile.one("change", function(e){
+		var file = e.target.files[0];
+		var reader = new FileReader();
+		reader.onload = function(re){
+			s.find("img").prop("src", re.target.result);
+		}
+		reader.readAsDataURL(file);
+	});
+	cubeFile.click();
+}
+function addtionChange(e){
+	var files = e.target.files;
+	$("#addtion .previewImg").empty();
+	var len = files.length;
+	for(var i = 0; i < len; i++){
+		var file = files[i];
+		var reader = new FileReader();
+		reader.onload = function(re){
+			var img = $("<img />");
+			img.prop("src", re.target.result);
+			$("#addtion .previewImg").append(img);
+		}
+		reader.readAsDataURL(file);
+	}
+}
+
+function operateSubmit(e){
+	var mode = $(":radio[name='mode']:checked ").val();
+	var render = $(":radio[name='render']:checked ").val();
+	Panorama.init(mode, render);
+	var cubes = new Array();
+	$("#cube li").each(function(i){
+		var div = document.createElement("div");
+		div.setAttribute("pos", $(this).attr("pos"));
+		var img = document.createElement("img");
+		img.onload = function(e){
+			img.width += 2;
+		}
+		img.src = $(this).find("img").prop("src");
+		div.appendChild(img);
+		cubes.push(div);
+	});
+	Panorama.setCube(cubes);
+	var addtions = new Array();
+	var length = $("#addtion .previewImg img").length;
+	$("#addtion .previewImg img").each(function(i){
+		var div = document.createElement("div");
+		var img = document.createElement("img");
+		img.src = $(this).prop("src");
+		div.appendChild(img);
+		div.setAttribute("sphere_phi", i / length * 360);
+		addtions.push(div);
+	});
+	Panorama.addElement(addtions);
+	$("#operate").hide();
+	return false;
+}
+		</script>
+	</head>
+	<body>
+		<form id="operate" action="" >
+			<div> 选择图片，生成一个720全景图 </div>
+			<ul id="cube">
+				<li pos="right">
+					<div class="word">右</div>
+					<div class="previewImg"><img src="images/posx.jpg" /></div>
+				</li>
+				<li pos="left">
+					<div class="word">左</div>
+					<div class="previewImg"><img src="images/negx.jpg" /></div>
+				</li>
+				<li pos="top">
+					<div class="word">上</div>
+					<div class="previewImg"><img src="images/posy.jpg" /></div>
+				</li>
+				<li pos="bottom">
+					<div class="word">下</div>
+					<div class="previewImg"><img src="images/negy.jpg" /></div>
+				</li>
+				<li pos="back">
+					<div class="word">后</div>
+					<div class="previewImg"><img src="images/posz.jpg" /></div>
+				</li>
+				<li pos="front">
+					<div class="word">前</div>
+					<div class="previewImg"><img src="images/negz.jpg" /></div>
+				</li>
+			</ul>
+			<div class="clear"></div>
+			<div id="addtion">
+				附加元素<div class="previewImg"><img src="images/number_1.png" /><img src="images/number_5.png" /></div>
+			</div>
+			<div>
+				操作方式
+				<label for="mode_touch"><input id="mode_touch" name="mode" type="radio" value="0" checked="checked" />触摸</label>
+				<label for="mode_gravity"><input id="mode_gravity" name="mode" type="radio" value="1" />重力</label>
+			</div>
+			<div>
+				渲染器
+				<label for="render_css3"><input id="render_css3" name="render" type="radio" value="css3" checked="checked" />css3</label>
+				<label for="render_canvas"><input id="render_canvas" name="render" type="radio" value="canvas" />canvas</label>
+				<label for="render_webgl"><input id="render_webgl" name="render" type="radio" value="webgl" />webgl</label>
+			</div>
+			<div>
+				<input name="submit" type="submit" value="提交" />
+			</div>
+		</form>
+		<div id="container">
+			
+		</div>
+	</body>
+</html>

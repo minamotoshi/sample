@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"> 
+<head>
+	<meta charset="utf-8">
+	<title>画画</title>
+
+	<link href="css/style.css" rel="stylesheet" type="text/css"/>
+	
+	<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+	<script type="text/javascript" src="js/touch-0.2.14.min.js"></script>
+	<script type="text/javascript" src="js/easeljs-0.8.2.min.js"></script>
+	<script type="text/javascript" src="js/preloadjs-0.6.2.min.js"></script>
+	<script type="text/javascript" src="js/tweenjs-0.6.2.min.js"></script>
+	<script type="text/javascript" src="js/project.js"></script>
+	<script type="text/javascript" src="js/Draw.class.js"></script>
+	<script type="text/javascript">
+
+window.onload = function(){
+	Draw.init();
+	Draw.setSaveClick(function(e){ TMChevrolet.FSaveWorkUpload(saveCallback, Draw.save()); });
+};
+function saveCallback(obj){
+	if(obj.code == 0){
+		window.location.href = obj.data.FUrl;
+	}else{
+		alert(obj.message);
+	}
+}
+
+	</script>
+
+</head>
+
+<body>
+
+
+<div class="box">
+	<canvas id="drawCanvas" width="1242" height="2208"></canvas>
+
+</div>
+</body>
+</html>

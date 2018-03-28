@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>录音波形</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/libs/jquery-3.1.0.min.js"></script>
+<script src="js/libs/easeljs-0.8.2.min.js"></script>
+<script src="js/libs/preloadjs-0.6.2.min.js"></script>
+<script src="js/libs/tweenjs-0.6.2.min.js"></script>
+<script src="js/Sonic.class.js"></script>
+</head>
+
+<body>
+	<div id="loading">
+		loading...
+	</div>
+	<div>
+		<canvas class="drawCanvas" id="sonic" width="300" height="200"></canvas>
+	</div>
+	<input type="button" value="测试声音" onclick="testSound()"/> 
+	<input type="button" value="开始录音" onclick="startRecording()"/>  
+	<input type="button" value="获取录音" onclick="obtainRecord()"/>  
+	<input type="button" value="停止录音" onclick="stopRecord()"/>  
+	<input type="button" value="播放录音" onclick="playRecord()"/>  
+	<div class="pop"><div class="message"></div></div>
+<script>
+var _game = null,
+	_recorder = null,
+	_audio = null;  
+$(function(){
+	_audio = document.createElement('audio');
+	
+	Sonic.Preload.init();
+	Sonic.Preload.load(progress, complete);
+});
+function progress(e){
+	var per = Math.floor(e.loaded * 10000) /100;
+	document.getElementById("loading").innerHTML = per + "%";
+}
+function complete(e){
+	document.body.removeChild(document.getElementById("loading"));
+	sonicInit();
+}
+function sonicInit(){
+	_game = new Sonic.main("sonic");
+	_game.on(Sonic.Event.START, function(e){console.log(e)});
+	_game.on(Sonic.Event.BINGO, function(e){console.log(e)});
+	_game.start();
+}
+
+function testSound () {
+	_audio.src = "sounds/bg.mp3";
+	_audio.play();
+}
+
+function startRecording() {  
+	Sonic.Recorder.get(function (rec) {  
+		_recorder = rec;  
+		_recorder.start();  
+	});  
+} 
+function obtainRecord(){  
+	var record = _recorder.getBlob();
+	console.log(record);
+	debugger;  
+};  
+
+function stopRecord(){  
+	_recorder.stop();  
+};  
+
+function playRecord(){  
+	_recorder.play(_audio);  
+}; 
+</script>
+
+</body>
+</html>

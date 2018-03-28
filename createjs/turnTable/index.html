@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>转盘</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script src="js/jquery-2.2.1.min.js"></script>
+<script src="js/easeljs-0.8.2.min.js"></script>
+<script src="js/tweenjs-0.6.2.min.js"></script>
+<script src="js/turntable.js"></script>
+
+
+</head>
+
+<body>
+	<!--canvas结构-->
+	<div class="abc">
+		<canvas class="drawCanvas" id="turntable" width="500" height="500"></canvas>
+		<!--中奖信息-->
+		<div id="box1" class="box">
+			<p class="text">一等奖</p>
+		</div>
+		<div id="box2" class="box">
+			<p class="text">二等奖</p>
+		</div>
+		<div id="box3" class="box">
+			<p class="text">三等奖</p>
+		</div>
+		<div id="box4" class="box">
+			<p class="text">四等奖</p>
+		</div>
+		<div id="box5" class="box">
+			<p class="text">五等奖</p>
+		</div>
+		<div id="box6" class="box">
+			<p class="text">六等奖</p>
+		</div>
+		<div id="box7" class="box">
+			<p class="text">七等奖</p>
+		</div>
+	</div>
+
+	<!--调用转盘功能-->
+	<script>
+		$(function(){
+			Turntable.init();
+			$(".box").on("click",function(){
+				$(this).hide();
+			})
+		});
+	</script>
+	<!--附加说明-->
+	<div>
+		<h2>说明:点击上方"抽奖"区域即可实现转盘旋转抽奖功能,抽奖结束后在当前页面会出现所中奖项的弹窗.</h2>
+		<h2>如果要实现抽奖结束后跳转页面功能,而非弹窗功能,可在turntable.js文件中/*转完回调*/部分参考注释进行修改;跳转的页面功能目前只有一、二、三等奖所对应的页面,可自行添加或减少.</h2>
+		<h2>替换转盘及指针图片,可在turntable.js文件中/*转盘图片及指针*/位置进行替换</h2>
+		<h2>更改所中奖项及转盘停下的角度,可在turntable.js文件中/*点击抽奖按钮*/位置进行修改</h2>
+		<h2>增加或减少奖品总数,可在可在turntable.js文件中/*奖品数据*/位置进行修改,修改后请自行计算转盘角度.</h2>
+		<h2>将转盘转动更改为指针转动,可在turntable.js文件中/*旋转开始*/位置进行修改</h2>
+		<p class="def">注意:谷歌浏览器必须在环境中测试才可实现该功能</p>
+	</div>
+</body>
+</html>

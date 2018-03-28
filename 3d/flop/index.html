@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>考记忆</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script src="js/libs/three.min.js"></script>
+		<script src="js/libs/jquery-3.1.0.min.js"></script>
+		<script src="js/libs/preloadjs-0.6.2.min.js"></script>
+		<script src="js/libs/Tween.js"></script>
+		<script src="js/libs/TrackballControls.js"></script>
+		<script src="js/Flop.class.js"></script>
+		<script>
+var game = null;
+var stageIndex = 0;
+$(function($) {
+	Flop.Preload.load(progress, complete);
+});
+
+function progress(e){
+	$("#loading").show();
+	$("#loading").text(e.loaded*100 + "%");
+}
+function complete(e){
+	$("#loading").hide();
+	game = new Flop.main($("#game")[0]);
+	game.launch();
+	game.addEventListener(Flop.Event.STAGE_CLEAR, stageClear);
+	game.show(stageIndex);
+}
+function stageClear (e) {
+	stageIndex++;
+	if(stageIndex > 2){
+		alert("通关");
+		stageIndex=0;
+	}
+	game.show(stageIndex);
+}
+		</script>
+	</head>
+
+	<body>
+		<div id="loading"></div>
+		<div id="game" ></div>
+	</body>
+</html>

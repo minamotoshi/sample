@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>动画</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link href="css/index.css" rel="stylesheet" type="text/css"/>
+	<script src="js/libs/jquery-3.1.0.min.js" type="text/javascript"></script>
+	<script src="js/libs/easeljs.min.js"></script>
+	<script src="js/libs/preloadjs.min.js"></script>
+	<script src="js/Cartoon.class.js"></script>
+	<script>
+var _game = null;
+$(function(){
+	$("#canvas").attr("width", $(window).width());
+	$("#canvas").attr("height", $(window).height());
+	_game = new Cartoon.main($("#canvas")[0], $("#video")[0]);
+	_game.launch();
+	$("#canvas").on("touchstart", gameStart);
+	$(window).resize(gameResize);
+});
+function gameStart (e) {
+	console.log(e);
+	_game.start();
+}
+function gameResize (e) {
+	$("#canvas").attr("width", $(window).width());
+	$("#canvas").attr("height", $(window).height());
+	_game.resize();
+}
+	</script>
+</head>
+<body>
+	<div class="loading">
+		100%
+	</div>
+	<div class="work">
+		<canvas id="canvas"></canvas>
+		<video id="video" width="1030" height="640" proload="true" webkit-playsinline playsinline src="media/video.mp4"></video>
+	</div>
+
+</body>
+</html>

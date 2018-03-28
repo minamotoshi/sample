@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+	<meta charset="utf-8">
+	<title>水波</title>
+
+	<link href="css/style.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="http://sample.vogso.com/3d/panorama/js/three.min.js"></script>
+	<script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+	<script type="text/javascript" src="js/easeljs-0.8.2.min.js"></script>
+	<script type="text/javascript" src="js/preloadjs-0.6.2.min.js"></script>
+	<script type="text/javascript" src="js/tweenjs-0.6.2.min.js"></script>
+	<script type="text/javascript" src="js/Wave.class.js"></script>
+	<script type="text/javascript">
+
+window.onload = function(){
+	Water.init();
+	window.addEventListener('devicemotion', devicemotion);
+	window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false );
+	window.addEventListener('deviceorientation', onGravity, false);
+};
+	
+function onGravity(e){
+	$("#alpha").text(e.alpha);
+	$("#beta").text(e.beta);
+	$("#gamma").text(e.gamma);
+	var euler = new THREE.Euler();
+	var quaternion = new THREE.Quaternion(); 
+	euler.set( e.beta, e.alpha, - e.gamma, 'YXZ' );
+	quaternion.setFromEuler( euler );
+	var q0 = new THREE.Quaternion();
+	var q1 = new THREE.Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) );
+	var zee = new THREE.Vector3( 0, 0, 1 );
+	quaternion.multiply( q1 );
+	quaternion.multiply( q0.setFromAxisAngle( zee, 0 ) ); 
+	$("#quaternion").html("x:"+quaternion.x+";<br/>y:"+quaternion.y+";<br/>z:"+quaternion.z+";<br/>w:"+quaternion.w);
+}
+function devicemotion(e) {
+	var acceleration = e.accelerationIncludingGravity;
+	$("#x").text(acceleration.x);
+	$("#y").text(acceleration.y);
+	$("#z").text(acceleration.z);
+	var dis = Math.pow( acceleration.x * acceleration.y * acceleration.z, 1/3);
+	Water.setOffset(dis);
+}
+function onScreenOrientationChangeEvent(e){
+	var str = "";
+	for(var k in e){
+		str = k + "=" + e[k];
+	}
+	$("#orient").text(window.orientation);
+}
+	</script>
+
+</head>
+
+<body>
+
+
+<div class="box">
+	<div>1.0.0</div>
+	<ul>
+		<li>x:<span id="x"></span></li>
+		<li>y:<span id="y"></span></li>
+		<li>z:<span id="z"></span></li>
+		<li>alpha<span id="alpha"></span></li>
+		<li>beta<span id="beta"></span></li>
+		<li>gamma<span id="gamma"></span></li>
+		<li>quaternion<span id="quaternion"></span></li>
+		<li>orient<span id="orient"></span></li>
+	</ul>
+	<canvas id="waterCanvas" width="500" height="400"></canvas>
+
+</div>
+</body>
+</html>

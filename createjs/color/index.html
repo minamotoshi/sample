@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>颜色效果</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/libs/jquery-3.1.0.min.js"></script>
+<script src="js/libs/easeljs-0.8.2.min.js"></script>
+<script src="js/libs/preloadjs-0.6.2.min.js"></script>
+<script src="js/libs/tweenjs-0.6.2.min.js"></script>
+<script src="js/Color.class.js"></script>
+</head>
+
+<body>
+	<div id="loading">
+		loading...
+	</div>
+	<div>
+		<canvas class="drawCanvas" id="game" width="640" height="800"></canvas>
+	</div>
+	<div class="pop"><div class="message"></div></div>
+<script>
+var _game;
+$(function(){
+	Color.Preload.init();
+	Color.Preload.load(progress, complete);
+});
+function progress(e){
+	var per = Math.floor(e.loaded * 10000) /100;
+	document.getElementById("loading").innerHTML = per + "%";
+}
+function complete(e){
+	document.body.removeChild(document.getElementById("loading"));
+	gameInit();
+}
+function gameInit(){
+	_game = new Color.main($("#game")[0]);
+	//_game.on(Jigsaw.Event.START, function(e){console.log(e)});
+	//_game.on(Jigsaw.Event.BINGO, function(e){console.log(e)});
+	_game.start();
+}
+
+</script>
+
+</body>
+</html>

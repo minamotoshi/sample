@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>篮球</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<script src="js/libs/jquery-3.1.0.min.js"></script>
+<script src="js/libs/preloadjs-0.6.2.min.js"></script>
+<script src="js/libs/three.min.js"></script>
+<script src="js/libs/OrbitControls.js"></script>
+<script src="js/libs/ammo.js"></script>
+<script src="js/libs/Tween.js"></script>
+<script src="js/Slam.class.js"></script>
+
+
+</head>
+
+<body>
+	<!--canvas结构-->
+	<div id="loading"></div>
+	<div id="slam"></div>
+	<div id="score">得分：0</div>
+	<div id="help">
+		拖动改变角度，松手投篮.<BR/>
+		改变投篮位置
+		<a href="javascript:;" class="left">左</a>
+		<a href="javascript:;" class="right">右</a>
+		<a href="javascript:;" class="front">前</a>
+		<a href="javascript:;" class="back">后</a>
+	</div>
+
+	<!--调用转盘功能-->
+	<script>
+var game = null;
+$(function(){
+	Slam.Preload.load(progress, complete);
+	$("#slam").one("click", gameStart);
+});
+function progress(e){
+	$("#loading").text(e.loaded*100 + "%");
+}
+function complete(e){
+	$("#loading").hide();
+	game = new Slam.main($("#slam")[0]);
+	game.addEventListener(Slam.Event.SCORE_ADD, gameScoreAdd);
+	game.launch();
+	$(".left").on("click", function(e){game.left()});
+	$(".right").on("click", function(e){game.right()});
+	$(".front").on("click", function(e){game.front()});
+	$(".back").on("click", function(e){game.back()});
+}
+function gameStart(e){
+	game.start();
+}
+function gameScoreAdd(e){
+	console.log(e);
+	var score = e.data.score;
+	var total = e.data.total;
+	$("#score").text("得分：" + total);
+	
+}
+	</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>换头像视频</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/libs/jquery-3.1.0.min.js"></script>
+<script src="js/libs/easeljs.min.js"></script>
+<script src="js/libs/preloadjs.min.js"></script>
+<script src="js/libs/tweenjs.min.js"></script>
+<script src="js/Gym.class.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" charset="utf-8"></script>
+<script src="js/Head.class.min.js"></script>
+</head>
+
+<body>
+	<div id="loading">
+		loading...
+	</div>
+	<div>
+		<canvas id="game" width="640" height="1042"></canvas>
+		<video id="video" width="300" src="media/gym.mp4" controls webkit-playsinline playsinline ></video>
+	</div>
+	<div class="pop"><div class="message"></div></div>
+<script>
+var game;
+images = images||{};
+$(function(){
+	Head.Preload.init();
+	Head.Preload.load(progress, complete, fileLoaded);
+});
+function progress(e){
+	var per = Math.floor(e.loaded * 10000) /100;
+	document.getElementById("loading").innerHTML = per + "%";
+}
+function complete(e){
+	document.body.removeChild(document.getElementById("loading"));
+	headInit();
+}
+function fileLoaded(e) {	
+	if (e.item.type == "image") { images[e.item.id] = e.result; }
+}
+function headInit(){
+	game = new Head.main($("#game")[0], $("#video")[0]);
+	game.start();
+}
+
+var browser={
+	versions:function(){
+		var u = navigator.userAgent, app = navigator.appVersion;
+		return {
+			webKit: u.indexOf('AppleWebKit') > -1,
+			ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
+			android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1,
+			weixin: u.indexOf('MicroMessenger') > -1,
+			txnews: u.indexOf('qqnews') > -1,
+			sinawb: u.indexOf('weibo') > -1,
+			mqq   : u.indexOf('QQ') > -1
+		};
+	}(),
+	language:(navigator.browserLanguage || navigator.language).toLowerCase()
+};
+
+function wxPlay() {
+	$("#video")[0].play();
+};
+
+if (browser.versions.ios&&browser.versions.weixin){
+	if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
+		wxPlay();
+	} else {
+		if (document.addEventListener) {
+			document.addEventListener("WeixinJSBridgeReady", wxPlay, false);
+		} else if (document.attachEvent) {
+			document.attachEvent("WeixinJSBridgeReady", wxPlay);
+			document.attachEvent("onWeixinJSBridgeReady", wxPlay);
+		}
+	};
+}else{
+	console.log("other");
+}
+
+
+</script>
+
+</body>
+</html>

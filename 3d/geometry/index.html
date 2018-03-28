@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>自定义几何体</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<script src="js/libs/jquery-3.1.0.min.js"></script>
+<script src="js/libs/preloadjs-0.6.2.min.js"></script>
+<script src="js/libs/three.min.js"></script>
+<script src="js/libs/OrbitControls.js"></script>
+<script src="js/libs/Tween.js"></script>
+<script src="js/Geometry.class.js"></script>
+
+
+</head>
+
+<body>
+	<!--canvas结构-->
+	<div id="geometry"></div>
+
+	<!--调用转盘功能-->
+	<script>
+var game = null;
+$(function(){
+	Geometry.Preload.load(progress, complete);
+	$("#geometry").one("click", gameStart);
+});
+function progress(e){
+	console.log(e);
+}
+function complete(e){
+	console.log(e);
+	game = new Geometry.main($("#geometry")[0]);
+	game.launch();
+}
+function gameStart(e){
+	game.start();
+}
+	</script>
+</body>
+</html>

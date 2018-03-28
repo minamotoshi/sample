@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Hitech Inside</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<script src="js/libs/three.min.js"></script>
+		<script src="js/libs/Tween.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+		<script src="js/libs/jquery-3.1.0.min.js"></script>
+		<script src="js/libs/preloadjs.min.js"></script>
+		<script src="js/libs/easeljs.min.js"></script>
+		<script src="js/libs/tweenjs.min.js"></script>
+		<script src="js/Gene.class.js"></script>
+		<script src="js/FLchuanye.class.js"></script>
+		<script>
+var _game = null,
+	_ready = null,
+	_status = {loading:false, loaded:false, game:false, ready:false, queue:0};
+
+$(function($) {
+	$("#loading").show();
+	//$("#loading .optical img").one("animationEnd mozAnimationEnd webkitAnimationEnd", loadingComplete);
+	$(".loadingAnimation").one("animationIteration  mozAnimationIteration  webkitAnimationIteration ", loadingComplete);
+	$("#ready").hide();
+	
+	$("#loading").css({width:$(window).width(), height:$(window).height()});
+	
+	Gene.Preload.init();
+	Gene.Preload.load(progress, complete);
+	
+});
+
+/**
+ *	 loading播放完毕
+ */
+function loadingComplete (e) {
+	_status.loading = true;
+	gameReady();
+}
+function handleFileLoad(e) {	
+	if (e.item.type == "image") { images[e.item.id] = e.result; }	
+}
+function handleComplete(e) {
+	_status.loaded = true;
+	gameReady();
+}
+var _listener = null;
+function animationPlaying (e) {
+	var mc = e.target;
+	if(mc.currentFrame == 484){
+		mc.stop();
+	}else if(mc.currentFrame == mc.totalFrames-1){
+		gameStart();
+	}
+}
+function onReadyClick () {
+	var mc = _ready.getChildAt(0);
+	mc.removeEventListener(_listener);
+	mc.play();
+	mc.instance_9.gotoAndPlay(2);
+	_game.audioPlay();
+}
+function progress(e){
+	//$("#loading").show();
+	//$("#loading").text(e.loaded*100 + "%");
+	var per = Math.floor(e.loaded*100) + "%";
+	if(_ready){
+		var mc = _ready.getChildAt(0);
+		mc.progressText1.text = per;
+		mc.progressText2.text = per;
+		mc.progressText3.text = per;
+		mc.progressText4.text = per;
+	}
+}
+function complete(e){
+	if(_status.queue == 0){
+		_status.queue = 1;
+		_game = new Gene.main($("#game")[0]);
+		_game.launch();
+		_game.addEventListener(Gene.Event.SLOGAN_CLICK, onsloganClick);
+		var loader = new createjs.LoadQueue(true);
+		loader.addEventListener("fileload", handleFileLoad);
+		loader.addEventListener("complete", handleComplete);
+		loader.loadManifest(lib.properties.manifest);
+	}else if(_status.queue == 1){
+		_status.queue = 2;
+		gameSetup();
+		var mc = _ready.getChildAt(0);
+		mc.gotoAndStop(484);
+		setTimeout(function(){mc.instance_9.play();}, 100);
+		_listener = mc.on("click", onReadyClick)
+	}
+}
+function onsloganClick (e) {
+	window.location.href = e.href;
+}
+function gameReady () {
+	if(_status.loading && _status.loaded){
+		$("#loading").addClass("readyfadeOut");
+		$("#loading").one("animationEnd mozAnimationEnd webkitAnimationEnd", function(){
+			$("#loading").remove();
+		});
+		$("#ready").show();
+		//$("#ready").addClass("readyfadeIn");
+		//
+		Gene.Preload.ready();
+		Gene.Preload.load();
+		
+		//
+		var mc = new lib.FLchuanye();
+		mc.on("tick", animationPlaying);
+		_ready = new createjs.Stage($("#ready")[0]);
+		_ready.addChild(mc);
+		createjs.Ticker.setFPS(lib.properties.fps);
+		createjs.Ticker.addEventListener("tick", _ready);
+	}
+}
+function gameSetup () {
+	var obj = [
+		{"id":"cube1", "x":75, "y":-160, "z":-400, "scale":0.7},
+		{"id":"cloud1", "x":-110, "y":-150, "z":-600, "scale":0.71},
+		{"id":"cloud2", "x":100, "y":-260, "z":-650, "scale":0.5},    
+		{"id":"greatwall", "x":80, "y":-180, "z":-700,"scale":0.7},
+		{"id":"lion", "x":-90, "y":-200, "z":-1000,"scale":0.7},
+		{"id":"cube2", "x":-350, "y":350, "z":-1100, "rotate":0, "scale":1},
+		{"id":"pyramid", "x":-290, "y":-80, "z":-1450, "rotate":2, "scale":1},
+		{"id":"pyramid", "x":-450, "y":-40, "z":-1470, "rotate":-40, "scale":0.6},
+		{"id":"sphinx", "x":300, "y":200, "z":-900, "rotate":0, "scale":1},
+		{"id":"road", "x":-150, "y":-370, "z":-1470,"scale":2},
+		{"id":"taj_mahal", "x":0, "y":250, "z":-1485,"scale":1},
+		{"id":"cloud2", "x":0, "y":50, "z":-1480,"scale":1.8},
+		{"id":"cube2", "x":400, "y":1000, "z":-2100, "rotate":-10, "scale":0.7,"flip":"h"},
+		{"id":"cloud3", "x":200, "y":400, "z":-1800, "rotate":-10, "scale":2,"flip":"h"},
+		
+		{"id":"train", "x":-40, "y":20, "z":-1800, "scale":0.2},
+		{"id":"train", "x":40, "y":20, "z":-1800, "scale":0.2,"flip":"h"},
+		{"id":"building", "x":0, "y":-160, "z":-2150, "scale":1},
+		{"id":"track", "x":10, "y":-200, "z":-2000, "scale":0.5},
+		{"id":"cloud3", "x":0, "y":-280, "z":-2600,"scale":2},
+		{"id":"bridge", "x":3, "y":10, "z":-2200, "scale":0.4},
+		{"id":"balloon1", "x":-80, "y":420, "z":-2550, "scale":1,"rotate":4},
+		{"id":"balloon2", "x":320, "y":480, "z":-3000, "scale":1.4},
+		
+		{"id":"chair", "x":5, "y":-20, "z":-2750, "rotate":2, "scale":0.16},
+		{"id":"chair", "x":-6, "y":-6, "z":-2800,"scale":0.06,"flip":"h"},
+		{"id":"chair", "x":2, "y":-2, "z":-2850,  "scale":0.02},
+		{"id":"chair", "x":-2, "y":-2, "z":-2900,"scale":0.02,"flip":"h"},
+		{"id":"chair", "x":2, "y":-2, "z":-2950,  "scale":0.02},
+		{"id":"cloud2", "x":100, "y":400, "z":-3100,"scale":0.8},
+		{"id":"cube2", "x":-150, "y":300, "z":-3000, "rotate":-10,"scale":0.3},
+		{"id":"tunnel2", "x":0, "y":0, "z":-2750,"scale":0.6},
+		{"id":"tunnel2", "x":0, "y":0, "z":-2800,"scale":0.4},
+		{"id":"tunnel2", "x":0, "y":0, "z":-2900,"scale":0.4},
+		{"id":"tunnel2", "x":0, "y":0, "z":-2950,"scale":0.4},
+		{"id":"tunnel1", "x":0, "y":0, "z":-3000,"scale":0.6},
+		{"id":"light", "x":-10, "y":-80, "z":-2400,"scale":0.1,"flip":"h"},
+		{"id":"light", "x":20, "y":-30, "z":-2500,"scale":0.05},
+		{"id":"light", "x":-50, "y":-80, "z":-2950,"scale":0.2,"flip":"h"},
+		{"id":"light", "x":20, "y":-20, "z":-2950,"scale":0.1},        
+		
+		
+		{"id":"pipe2", "x":9, "y":-12, "z":-3150,"scale":0.1},
+		{"id":"pipe1", "x":-20, "y":65, "z":-3220,"scale":0.12},
+		{"id":"brain_border", "x":0, "y":0, "z":-3380,"scale":0.18},
+		{"id":"brain", "x":8, "y":24, "z":-3290,"scale":0.56},
+		{"id":"gear1", "x":12, "y":-70, "z":-3580,"scale":0.7},
+		{"id":"gear2", "x":100, "y":170, "z":-3620,"scale":0.4},
+		{"id":"glass2", "x":-100, "y":0, "z":-3770,"scale":0.45},
+		{"id":"glass2", "x":100, "y":0, "z":-3770, "flip":"h","scale":0.45},
+		{"id":"debris", "x":10, "y":-60, "z":-4100,"scale":0.75},
+		{"id":"line2", "x":0, "y":0, "z":-3810,"scale":0.5},
+		
+		{"id":"relation", "x":0, "y":-10, "z":-4100,"scale":0.54},
+		{"id":"screen1", "x":0, "y":30, "z":-4300,"scale":0.4},
+		{"id":"manipulator1", "x":30, "y":40, "z":-4350,"scale":0.2},
+		{"id":"glow", "x":-5, "y":-15, "z":-4111,"scale":0.4},
+		{"id":"wire", "x":70, "y":-130, "z":-4400,"scale":0.24},
+		{"id":"wire", "x":-70, "y":30, "z":-4600,"scale":0.24},
+		{"id":"glass2", "x":-300, "y":-60, "z":-4800,"scale":0.35},
+		{"id":"glass2", "x":300, "y":-60, "z":-4800,"flip":"h"  ,"scale":0.35},
+		{"id":"screen2", "x":-80, "y":-170, "z":-4600,"scale":0.33},
+		{"id":"screen2", "x":150, "y":160, "z":-4700,"scale":0.24},
+		{"id":"screen2", "x":100, "y":-100, "z":-4800,"scale":0.2},
+		
+		{"id":"magic_cube", "x":0, "y":-60, "z":-4950,"scale":0.2},
+		{"id":"manipulator1", "x":90, "y":-30, "z":-5400,"rotate":0,"scale":0.5},
+		{"id":"cloud1", "x":40, "y":-65, "z":-5150,"scale":0.42},
+		{"id":"arm", "x":-20, "y":-180, "z":-5200,"scale":0.3},
+		{"id":"hexagon2", "x":-55, "y":0, "z":-5530,"scale":0.5},
+		{"id":"hexagon3", "x":50, "y":-240, "z":-5430,"scale":0.4},
+		{"id":"robot1", "x":-60, "y":-20, "z":-5600,"scale":0.8},
+		{"id":"manipulator2", "x":50, "y":330, "z":-5700,"scale":1},
+		
+		{"id":"hexagon1", "x":-200, "y":330, "z":-6000,"scale":0.65},
+		{"id":"keyboard1", "x":-120, "y":200, "z":-6100,"scale":0.65},
+		{"id":"line2", "x":0, "y":0, "z":-6150,"scale":0.3},
+		{"id":"tree", "x":0, "y":-100, "z":-6500,"scale":0.8},
+		{"id":"cloud1", "x":0, "y":10, "z":-7150,"scale":1},
+		{"id":"robot2", "x":-205, "y":180, "z":-7200,"scale":0.7},
+		{"id":"robot2", "x":205, "y":180, "z":-7200,"scale":0.7,"flip":"h"},
+		{"id":"vertical_light1", "x":170, "y":-100, "z":-6900,"scale":0.5},
+		{"id":"vertical_light1", "x":-170, "y":-100, "z":-6900,"scale":0.5,"flip":"h"},
+		{"id":"vertical_light2", "x":0, "y":-350, "z":-6800,"scale":1},
+		{"id":"bias_light", "x":4, "y":180, "z":-7401,"scale":1.6},
+		{"id":"brain", "x":0, "y":170, "z":-7500,"scale":0.2},
+		
+		{"id":"genetic1", "x":-110, "y":70, "z":-7930,"scale":0.3},
+		{"id":"genetic1", "x":50, "y":-130, "z":-8000,"scale":0.3,"rotate":-50},
+		{"id":"body1", "x":0, "y":5, "z":-8300,"scale":1.2},
+		{"id":"microscope", "x":-300, "y":-450, "z":-8530,"scale":0.6},
+		{"id":"microscope", "x":320, "y":-370, "z":-8500,"scale":0.6,"rotate":-95},
+		{"id":"microscope", "x":320, "y":130, "z":-8650,"scale":0.6,"flip":"h","rotate":10},
+		{"id":"dna1", "x":0,"y":-230, "z":-8400,"scale":0.6},
+		{"id":"dna1", "x":-130,"y":-450, "z":-8630,"scale":0.4,"rotate":10},
+		{"id":"dna2", "x":150,"y":430, "z":-8900,"scale":1,"rotate":-10},
+		{"id":"hexagon5", "x":50,"y":700, "z":-9000,"scale":1},
+		{"id":"hexagon4", "x":0,"y":0, "z":-9100,"scale":1},
+		{"id":"hexagon6", "x":100,"y":400, "z":-9200,"scale":1},
+		
+		{"id":"pill", "x":-60,"y":-180, "z":-9450,"scale":0.3,"flip":"h"},
+		{"id":"aperture", "x":0,"y":0, "z":-9600,"scale":0.6},
+		{"id":"virus1", "x":-40,"y":30, "z":-9700,"scale":0.7},
+		{"id":"virus2", "x":-80,"y":-75, "z":-9790,"scale":0.4},
+		{"id":"virus2", "x":80,"y":-45, "z":-9850,"scale":0.4},
+		{"id":"virus2", "x":140,"y":-20, "z":-10050,"scale":0.4},
+		{"id":"virus2", "x":140,"y":180, "z":-10180,"scale":0.4},
+		{"id":"genetic2", "x":250,"y":680, "z":-10210,"scale":0.7},
+		{"id":"mesa", "x":0,"y":-730, "z":-10700,"scale":1},
+		{"id":"body3", "x":-200,"y":100, "z":-10750,"scale":2},
+		{"id":"mesa1", "x":-210,"y":-250, "z":-10850,"scale":2},
+		{"id":"body3", "x":300,"y":50, "z":-11100,"scale":2,"flip":"h"},
+		{"id":"mesa1", "x":310,"y":-300, "z":-11200,"scale":2},
+		{"id":"genetic2", "x":-330,"y":600, "z":-10300,"scale":1,"rotate":100},
+		{"id":"shape", "x":30,"y":-90, "z":-10760,"scale":1.5},
+		
+		{"id":"ys7", "x":30, "y":-90, "z":-11100,"scale":0.3},
+		{"id":"ys3", "x":-70, "y":-60, "z":-11300,"scale":0.3},
+		{"id":"jh", "x":-30, "y":-10, "z":-11350,"scale":0.4},
+		{"id":"ys2", "x":80, "y":-70, "z":-11430,"scale":0.4},
+		{"id":"ys6", "x":-50, "y":-140, "z":-11550,"scale":0.5},
+		{"id":"ys4", "x":70, "y":140, "z":-11680,"scale":0.7},
+		{"id":"ys1", "x":-70, "y":100, "z":-11770,"scale":0.6},
+		{"id":"sj2", "x":-65, "y":-60, "z":-11850,"scale":0.7},
+		{"id":"xq1", "x":-40, "y":90, "z":-11950,"scale":0.3,"flip":"h"},
+		{"id":"sj1", "x":160, "y":140, "z":-12050,"scale":1},
+		{"id":"xq1", "x":50, "y":370, "z":-12180,"scale":1},
+		
+		
+		
+		{"id":"chair", "x":40, "y":-210, "z":-12200,"scale":0.6},
+		{"id":"gs2", "x":0, "y":-300, "z":-12400,"scale":1},
+		{"id":"gs1", "x":-150, "y":-380, "z":-12450,"scale":1},
+		{"id":"fc3", "x":-55, "y":-170, "z":-12550,"scale":0.7},
+		{"id":"hxc1", "x":120, "y":10, "z":-12620,"scale":0.8},
+		{"id":"hxc2", "x":-200, "y":30, "z":-12750,"scale":1},
+		{"id":"tyn", "x":-260, "y":30, "z":-12800,"scale":1},
+		{"id":"gx", "x":0, "y":30, "z":-12900,"scale":1.2},
+		{"id":"yhy3", "x":-70, "y":300, "z":-12950,"scale":1},
+		{"id":"hx2", "x":0, "y":0, "z":-13000,"scale":1.3},
+		{"id":"gq3", "x":200, "y":250, "z":-13060,"scale":1.7},
+		{"id":"gq2", "x":120, "y":450, "z":-13130,"scale":2},
+		{"id":"gs1", "x":0, "y":800, "z":-13150,"scale":2},
+		{"id":"chair", "x":0, "y":600, "z":-13200,"scale":0.4},
+		{"id":"chair", "x":-150, "y":700, "z":-13300,"scale":0.2,"flip":"h"},
+		{"id":"xq1", "x":-50, "y":750, "z":-13330,"scale":0.6},
+		
+		{"id":"fc2", "x":35, "y":-20, "z":-13400,"scale":0.2},
+		{"id":"fc1", "x":-50, "y":-100, "z":-13600,"scale":0.3},
+		{"id":"yhy1", "x":-40, "y":150, "z":-13750,"scale":0.6},
+		{"id":"hx1", "x":0, "y":10, "z":-14000,"scale":0.8},
+		{"id":"fd2", "x":15, "y":-150, "z":-13900,"scale":0.8},
+		{"id":"fd1", "x":15, "y":100, "z":-14150,"scale":0.7},
+		{"id":"yhy2", "x":150, "y":200, "z":-14000,"scale":0.7},
+		{"id":"jh2", "x":150, "y":600, "z":-14250,"scale":1.5},
+		{"id":"gq1", "x":0, "y":0, "z":-14250,"scale":1.3},
+		{"id":"xq1", "x":-20, "y":500, "z":-14400,"scale":0.7,"flip":"h"},
+		
+		
+		{"id":"kouhao", "x":0,"y":140, "z":-14800,"scale":0.7},
+		{"id":"wz", "x":0,"y":-10, "z":-14650,"scale":0.5, "href":"http://tech.qq.com/zt2016/hitechh5/index.htm"},
+		{"id":"ren", "x":5,"y":-450, "z":-14950,"scale":1}
+
+	];
+	_game.setup(obj, 1.2, 5, 0, -14300, -13900);
+}
+function gameStart () {
+	_ready.removeAllChildren();
+	$("#ready").remove();
+	_game.start();
+}
+		</script>
+	</head>
+
+	<body>
+		<div id="loading">
+			<div class="optical">
+				<img class="loadingAnimation" src="images/guangyuan.png" />
+			</div>
+		</div>
+		<canvas id="ready" width="640" height="1024" style="width:100%;height:100%;background-color:rgba(0, 0, 0, 0.00)"></canvas>
+		<canvas id="game" ></canvas>
+	</body>
+</html>

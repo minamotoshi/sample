@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>video panorama demo v 1.0.0</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script src="js/three.min.js"></script>
+		<script src="js/CanvasRenderer.js"></script>
+		<script src="js/Projector.js"></script>
+		<script src="js/CustomDeviceOrientation.js"></script>
+		<script src="js/jquery-2.2.1.min.js"></script>
+		<script src="js/iphone-inline-video.browser.js"></script>
+		<script src="js/PanoVideo.class.js"></script>
+		<script>
+			
+$(function(){
+	/*
+	var isIOS = /iPhone|iPod/i.test(navigator.userAgent);
+	isIOS = false;
+	if (isIOS) {
+		PanoVideo.createVideo("media/vr_demo.webm");
+	} else {
+		PanoVideo.createVideo("media/car640.mp4");
+	}
+	*/
+	PanoVideo.createVideo("media/car640.mp4");
+	PanoVideo.inlinePlay();
+	PanoVideo.init();
+});
+
+		</script>
+	</head>
+	<body>
+		<div id="controllor">
+			<div class="btns">
+				<p>点击“开始”播放3D视频</p>
+				<input type="button" value="播放(鼠标控制)" data-controll="mouse"/>
+				<input type="button" value="播放(触摸控制)" data-controll="touch"/>
+				<input type="button" value="播放(重力感应)" data-controll="gravity" />
+			</div>
+		</div>
+		<div id="messagePop"></div>
+		<div id="loadingPop">载入中……</div>
+		<div id="container"></div>		
+	</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>圆柱动画</title>
+<style type="text/css">
+body {
+	margin:0;padding:0;overflow: hidden;
+	background: #000;
+}
+div#canvas3d {
+}
+#loading {
+	font-size: 100px;
+	text-align: center;
+	color: #f00;
+}
+</style>
+	
+	<script src="js/jquery-2.2.1.min.js"></script>
+	<script src="js/three.min.js"></script>
+	<script src="js/tween.min.js"></script>
+	<script src="js/preloadjs-0.6.2.min.js"></script>
+	<script src="js/stats.min.js"></script>
+	<script src="js/Projector.js"></script>
+	<script src="js/CanvasRenderer.js"></script>
+	<script src="js/DeviceOrientationControls.js"></script>
+	<script src="js/AntiMeshControls.js"></script>
+	<script src="js/Cylinder.js"></script>
+	<script>
+$(function(){
+	Cylinder.init($("#canvas3d")[0]);
+	$("#loading").show();
+	Cylinder.preload(progress, complete);
+});
+function progress(e){
+	var str = Math.floor((e.loaded * 1000)/10) + "%";
+	$("#loading").text(str);
+}
+function complete(e){
+	$("#loading").hide();
+}
+	</script>
+</head>
+<body>
+	<div id="loading">loading</div>
+	<div id="canvas3d"></div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>擦拭</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery-2.2.1.min.js"></script>
+<script src="js/easeljs-0.8.2.min.js"></script>
+<script src="js/Erase.js"></script>
+</head>
+
+<body>
+	<div>
+		<canvas class="drawCanvas" id="erase" width="600" height="900"></canvas>
+	</div>
+	<div class="controller">
+		<input id="browseBtn" type="button" value="浏览"/>
+		<input id="operateBtn" type="button" value="操作"/>
+		<input id="eraseBtn" type="button" value="擦拭"/>
+		<input id="undoBtn" type="button" value="撤销"/>
+		<input id="completeBtn" type="button" value="完成"/>
+	</div>
+	<div class="pop"><div class="message"></div></div>
+<script>
+$(function(){
+	Erase.init();
+	showPre();
+	
+	$("#browseBtn").on("click",function(){
+		Erase.browse();
+		showOperate();
+	});
+	$("#operateBtn").on("click",function(){
+		showOperate();
+	});
+	$("#eraseBtn").on("click",function(){
+		Erase.setPenSize(50);
+		Erase.drawState();
+		showErase();
+	});
+	$("#undoBtn").on("click",function(){
+		Erase.undo();
+	});
+	$("#completeBtn").on("click",function(){
+		showComplete();
+	});
+	
+});
+/**
+ *	准备状态
+ */
+function showPre(){
+	$("#browseBtn").show();
+	$("#operateBtn").hide();
+	$("#eraseBtn").hide();
+	$("#undoBtn").hide();
+	$("#completeBtn").hide();
+}
+/**
+ *	操作状态
+ */
+function showOperate(){
+	$("#browseBtn").show();
+	$("#operateBtn").hide();
+	$("#eraseBtn").show();
+	$("#undoBtn").hide();
+	$("#completeBtn").hide();
+}
+/**
+ *	擦除状态
+ */
+function showErase(){
+	$("#browseBtn").hide();
+	$("#operateBtn").show();
+	$("#eraseBtn").hide();
+	$("#undoBtn").show();
+	$("#completeBtn").show();
+}
+/**
+ *	完成
+ */
+function showComplete(){
+	$(".pop").width($(document).width());
+	$(".pop").height($(document).height());
+	var img = new Image();
+	img.src = Erase.save();
+	$(".pop .message").append(img);
+	$(".pop").show();
+}
+
+
+</script>
+
+</body>
+</html>

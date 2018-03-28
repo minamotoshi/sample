@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=640, user-scalable=no, target-densitydpi=device-dpi">
+	<title>飞机大战</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/easeljs-0.8.2.min.js"></script>
+	<script src="js/preloadjs-0.6.2.min.js"></script>
+	<script src="js/tweenjs-0.6.2.min.js"></script>
+	<script src="js/AirWar.class.js"></script>
+	<script>
+		var game;
+		window.onload = function(){
+			AirWar.Preload.init();
+			AirWar.Preload.load(progress, complete);
+			
+			
+		}
+		
+		//加载中
+		function progress(e){
+			var per = Math.floor(e.loaded * 100) + "%";
+			$(".loadText").text("已载入"+per);
+		}
+		//加载完毕
+		function complete(e){
+			$(".starBtn").fadeIn();
+			$(".starBtn").on("click",function(){
+				$(".loading").hide();
+				$(".gameBox").show();
+				gameStart();
+			});
+		}
+		//游戏开始
+		function gameStart(){
+			
+			var container = document.getElementById("game");
+			//if(container.height > window.innerHeight) container.height = window.innerHeight;
+			game = new AirWar.main(container);
+			game.on(AirWar.Event.GAME_OVER,function(){
+				gameOver();
+			});
+			game.reset();
+		}
+		//游戏结束
+		function gameOver(){
+			$(".gameOver").show();
+			$(".score").text(game.score().totalScore());
+			$(".btn").on("click",function(){
+				$(".gameOver").hide();
+				gameStart();
+			});
+		}
+	</script>
+</head>
+<body>
+	<div class="box">
+		
+		<!--loading-->
+		<div class="loading">
+			<img src="images/bg1.png" alt="">
+			<p class="loadText"></p>
+			<div class="starBtn">开始游戏</div>
+		</div>
+		<!--game-->
+		<div class="gameBox">
+			<canvas id="game" width="480" height="853"></canvas>
+			<!--game over-->
+			<div class="gameOver">
+				<h1>飞机大战分数</h1>
+				<p class="score"></p>
+				<div class="btnBox">
+					<div class="btn">重新开始</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>
